@@ -13,11 +13,28 @@ public class ControlPlayer : MonoBehaviour
 
     GameObject theCamera;
 
+    public GameObject hand;
+
     float axisY;
+
+    public bool canTake = false;
+    public GameObject objToTake;
+
+    private static ControlPlayer instance;
+
+    float rateLaunch = 0.5f;
+    float nextTime;
+
+    public static ControlPlayer Instance
+    {
+        get{   return instance;}
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
+
         theCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
 
@@ -28,12 +45,6 @@ public class ControlPlayer : MonoBehaviour
         /*Para la configuración del joystick en @ C
           * joystick button 0->C
           */
-        if (Input.GetButtonDown("ButtonC_OnC"))//0
-        {
-            Debug.Log("presiono C");
-            //transform.Rotate(Vector3.left * spinValue * Time.deltaTime);
-            ShowButton("C");
-        }
 
         if (Input.GetButtonDown("ButtonA_OnC"))//1
         {
@@ -53,16 +64,36 @@ public class ControlPlayer : MonoBehaviour
             ShowButton("D");
         }
 
-        if (Input.GetButtonDown("ButtonRT_OnC"))//4
+        if ((Input.GetButtonDown("ButtonRT_OnC")) || Input.GetKeyDown("f") && canTake)//4
         {
             Debug.Log("presiono RT");
             ShowButton("RT");
+
+            TakingObj();
+
         }
 
-        if (Input.GetButtonDown("ButtonRB_OnC"))//5
+        if (Input.GetButtonUp("ButtonRT_OnC") || Input.GetKeyUp("f") && canTake)
+        {
+            DropObj();
+        }
+
+        if (Input.GetButton("ButtonC_OnC") || Input.GetKey("g") && nextTime < Time.time && canTake)//5
         {
             Debug.Log("presiono RB");
             ShowButton("RB");
+            objToTake.GetComponent<StatusObj>().forceLaunch++;
+            Debug.Log(objToTake.name);
+            nextTime = Time.time + rateLaunch;
+        }
+
+        if (Input.GetButtonUp("ButtonC_OnC") || Input.GetKeyUp("g") && canTake)//5
+        {
+            Debug.Log("suelto C");
+            ShowButton("C");
+            objToTake.GetComponent<StatusObj>().currentStatus = StatusObj.Status.launch;
+            nextTime = 0f;
+            DropObj();
         }
 
         //Debug.Log(Input.GetAxis("Vertical"));
@@ -73,14 +104,27 @@ public class ControlPlayer : MonoBehaviour
 
         axisY = Input.GetAxis("Vertical");
         transform.Translate(Vector3.forward * speedMove * axisY * Time.deltaTime);
+        //Vector3 eulerRotation = new Vector3(transform.eulerAngles.x, theCamera.transform.localEulerAngles.y + 5f, transform.eulerAngles.z);
 
-        Vector3 eulerRotation = new Vector3(transform.eulerAngles.x, theCamera.transform.localEulerAngles.y + 5f, transform.eulerAngles.z);
-
-        transform.rotation = Quaternion.Euler(eulerRotation);
+        //transform.rotation = Quaternion.Euler(eulerRotation);
     }
 
     void ShowButton(string theButton)
     {
         txtButton.text = "Presiono " + theButton;
+    }
+
+    void TakingObj()
+    {
+        objToTake.GetComponent<Rigidbody>().useGravity = false;
+        objToTake.transform.SetParent(hand.transform);
+        objToTake.transform.position = hand.transform.position;
+    }
+    void DropObj()
+    {
+        objToTake.transform.SetParent(null);
+        objToTake.GetComponent<Rigidbody>().useGravity = true;
+        objToTake = null;
+        canTake = false;
     }
 }

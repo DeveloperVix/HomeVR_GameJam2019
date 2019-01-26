@@ -4,28 +4,55 @@ using UnityEngine;
 
 public class StatusObj : MonoBehaviour
 {
-    public enum Status { Idle, Taking};
-    public Status currentStatus;
+
+    public float forceLaunch = 0f;
+    public float limitForce = 5f;
+
+    Rigidbody rbd3D;
+
+    public enum Status { Idle, launch};
+    public Status currentStatus; 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rbd3D = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if(forceLaunch > limitForce)
+        {
+            forceLaunch = limitForce;
+        }
+    }
+    private void FixedUpdate()
+    {
+        if(currentStatus == Status.launch)
+        {
+            rbd3D.AddForce(Vector3.forward * forceLaunch, ForceMode.Impulse);
+        }
+
+        if(rbd3D.velocity.y <= 0f && currentStatus != Status.Idle)
+        {
+            forceLaunch = 0f;
+            currentStatus = Status.Idle;
+        }
     }
 
-    public void PlayerTakeMe()
+    public void PlayerSeeMe()
     {
-        currentStatus = Status.Taking;
+        ControlPlayer.Instance.canTake = true;
+        ControlPlayer.Instance.objToTake = gameObject;
+        Debug.Log("El jugador me ve");
     }
 
-    public void Idle()
+    public void PlayerNoSeeMe()
     {
-        currentStatus = Status.Idle;
+        ControlPlayer.Instance.canTake = false;
+        ControlPlayer.Instance.objToTake = null;
+        Debug.Log("El jugador no me ve");
     }
+
+
 }
