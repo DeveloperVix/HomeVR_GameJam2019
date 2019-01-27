@@ -18,7 +18,7 @@ public class ControlPlayer : MonoBehaviour
     float axisY;
 
     public bool canTake = false;
-    public GameObject objToTake;
+    public GameObject observedObject;
 
     private static ControlPlayer instance;
 
@@ -46,10 +46,15 @@ public class ControlPlayer : MonoBehaviour
           * joystick button 0->C
           */
 
-        if (Input.GetButtonDown("ButtonA_OnC"))//1
+        if (Input.GetButtonDown("ButtonA_OnC") || Input.GetKeyDown("a") &&
+            observedObject != null)//1
         {
             Debug.Log("presiono A");
             ShowButton("A");
+            if(observedObject.GetComponent<IActionEvent>().executeAction)
+            {
+                observedObject.GetComponent<IActionEvent>().ActiveBehaviour();
+            }         
         }
 
         if (Input.GetButtonDown("ButtonB_OnC"))//2
@@ -58,10 +63,11 @@ public class ControlPlayer : MonoBehaviour
             ShowButton("B");
         }
 
-        if (Input.GetButtonDown("ButtonD_OnC"))//3
+        if (Input.GetButtonDown("ButtonD_OnC") || Input.GetKeyDown("d"))//3
         {
             Debug.Log("presiono D");
             ShowButton("D");
+            _GM.Instance.PauseGame();
         }
 
         if ((Input.GetButtonDown("ButtonRT_OnC")) || Input.GetKeyDown("f") && canTake)//4
@@ -82,8 +88,8 @@ public class ControlPlayer : MonoBehaviour
         {
             Debug.Log("presiono C");
             ShowButton("C");
-            objToTake.GetComponent<StatusObj>().forceLaunch++;
-            Debug.Log(objToTake.name);
+            observedObject.GetComponent<StatusObj>().forceLaunch++;
+            Debug.Log(observedObject.name);
             nextTime = Time.time + rateLaunch;
         }
 
@@ -91,7 +97,7 @@ public class ControlPlayer : MonoBehaviour
         {
             Debug.Log("suelto C");
             ShowButton("C");
-            objToTake.GetComponent<StatusObj>().currentStatus = StatusObj.Status.launch;
+            observedObject.GetComponent<StatusObj>().currentStatus = StatusObj.Status.launch;
             nextTime = 0f;
             DropObj();
         }
@@ -105,8 +111,6 @@ public class ControlPlayer : MonoBehaviour
         axisY = Input.GetAxis("Vertical");
         transform.position = transform.position + theCamera.transform.forward * axisY * speedMove * Time.deltaTime;
         
-
-        //Debug.Log(transform.eulerAngles);
     }
 
     void ShowButton(string theButton)
@@ -116,15 +120,15 @@ public class ControlPlayer : MonoBehaviour
 
     void TakingObj()
     {
-        objToTake.GetComponent<Rigidbody>().useGravity = false;
-        objToTake.transform.SetParent(hand.transform);
-        objToTake.transform.position = hand.transform.position;
+        observedObject.GetComponent<Rigidbody>().useGravity = false;
+        observedObject.transform.SetParent(hand.transform);
+        observedObject.transform.position = hand.transform.position;
     }
     void DropObj()
     {
-        objToTake.transform.SetParent(null);
-        objToTake.GetComponent<Rigidbody>().useGravity = true;
-        objToTake = null;
+        observedObject.transform.SetParent(null);
+        observedObject.GetComponent<Rigidbody>().useGravity = true;
+        observedObject = null;
         canTake = false;
     }
 }

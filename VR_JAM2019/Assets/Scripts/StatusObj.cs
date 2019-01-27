@@ -43,14 +43,14 @@ public class StatusObj : MonoBehaviour
     public void PlayerSeeMe()
     {
         ControlPlayer.Instance.canTake = true;
-        ControlPlayer.Instance.objToTake = gameObject;
+        ControlPlayer.Instance.observedObject = gameObject;
         Debug.Log("El jugador me ve");
     }
 
     public void PlayerNoSeeMe()
     {
         ControlPlayer.Instance.canTake = false;
-        ControlPlayer.Instance.objToTake = null;
+        ControlPlayer.Instance.observedObject = null;
         Debug.Log("El jugador no me ve");
     }
 
