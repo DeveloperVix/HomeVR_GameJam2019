@@ -80,8 +80,8 @@ public class ControlPlayer : MonoBehaviour
 
         if (Input.GetButton("ButtonC_OnC") || Input.GetKey("g") && nextTime < Time.time && canTake)//5
         {
-            Debug.Log("presiono RB");
-            ShowButton("RB");
+            Debug.Log("presiono C");
+            ShowButton("C");
             objToTake.GetComponent<StatusObj>().forceLaunch++;
             Debug.Log(objToTake.name);
             nextTime = Time.time + rateLaunch;
@@ -103,10 +103,10 @@ public class ControlPlayer : MonoBehaviour
         #endregion
 
         axisY = Input.GetAxis("Vertical");
-        transform.Translate(Vector3.forward * speedMove * axisY * Time.deltaTime);
-        //Vector3 eulerRotation = new Vector3(transform.eulerAngles.x, theCamera.transform.localEulerAngles.y + 5f, transform.eulerAngles.z);
+        transform.position = transform.position + theCamera.transform.forward * axisY * speedMove * Time.deltaTime;
+        
 
-        //transform.rotation = Quaternion.Euler(eulerRotation);
+        //Debug.Log(transform.eulerAngles);
     }
 
     void ShowButton(string theButton)
