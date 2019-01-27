@@ -6,9 +6,10 @@ public class InOutMusic : MonoBehaviour
 {
     public AudioClip[] Songs = new AudioClip[3];
     public AudioSource SongController;
+    public GameObject Boton;
     public int NSong = 0;
     public int In;
-    public bool Inside = false;
+    public bool Inside;
 
     void  Start()
     {
@@ -16,13 +17,14 @@ public class InOutMusic : MonoBehaviour
         SongController.clip = Songs[NSong];
         SongController.Play();
         In = 0;
+        Inside = false;
     }
 
     void Update()
     {
-        if (!SongController.isPlaying)
+        if (In == 3)
         {
-            ChangeSong();
+            Boton.SetActive(true);
         }
     }
 
@@ -35,24 +37,28 @@ public class InOutMusic : MonoBehaviour
         SongController.Play();
     }
 
+
     private void OnTriggerEnter(Collider Music)
     {
 
-        if (Music.CompareTag("MainCamera"))
+        if (Music.CompareTag("Player"))
         {
-            Debug.Log("Entro");
-            if (Inside == false)
+            //SongController.Pause();
+
+            if (In == 0 || In%2 != 0)
             {
-                SongController.Pause();
-                In++;
-                Inside = true;
+               Debug.Log("Entro");
+                SongController.UnPause();
+                
             }
 
-            if (Inside == true)
+            if (In%2 == 0)
             {
-                SongController.UnPause();
-                Inside = false;
+                Debug.Log("Salio");
+                SongController.Pause();
             }
+
+            In++;
         }
     }
 }

@@ -110,7 +110,7 @@ public class ControlPlayer : MonoBehaviour
         //Debug.Log(Input.GetAxis("Vertical"));
         //Debug.Log(Input.GetAxis("Horizontal"));
 
-        txtAxis.text = "X: " + Input.GetAxis("Horizontal") + "   Y: " + Input.GetAxis("Vertical");
+        //txtAxis.text = "X: " + Input.GetAxis("Horizontal") + "   Y: " + Input.GetAxis("Vertical");
         #endregion
 
         axisY = Input.GetAxis("Vertical");
@@ -120,7 +120,7 @@ public class ControlPlayer : MonoBehaviour
 
     void ShowButton(string theButton)
     {
-        txtButton.text = "Presiono " + theButton;
+        //txtButton.text = "Presiono " + theButton;
     }
 
     void TakingObj()
