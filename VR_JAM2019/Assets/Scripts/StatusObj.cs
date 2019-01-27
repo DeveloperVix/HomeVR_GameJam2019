@@ -51,6 +51,7 @@ public class StatusObj : MonoBehaviour
     {
         ControlPlayer.Instance.canTake = false;
         ControlPlayer.Instance.observedObject = null;
+        rbd3D.useGravity = true;
         Debug.Log("El jugador no me ve");
     }
 

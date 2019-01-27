@@ -51,10 +51,15 @@ public class ControlPlayer : MonoBehaviour
         {
             Debug.Log("presiono A");
             ShowButton("A");
-            if(observedObject.GetComponent<IActionEvent>().executeAction)
+            if(observedObject.GetComponent<IActionEvent>() != null && observedObject.GetComponent<IActionEvent>().executeAction)
             {
                 observedObject.GetComponent<IActionEvent>().ActiveBehaviour();
-            }         
+            }
+            
+            if(observedObject.GetComponent<TimeSleep>() != null && observedObject.GetComponent<TimeSleep>().wakeUp)
+            {
+                observedObject.GetComponent<TimeSleep>().SetWakeUp();
+            }
         }
 
         if (Input.GetButtonDown("ButtonB_OnC"))//2
