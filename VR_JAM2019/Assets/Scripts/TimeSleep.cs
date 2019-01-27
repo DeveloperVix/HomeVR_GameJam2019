@@ -17,6 +17,8 @@ public class TimeSleep : MonoBehaviour, IActionEvent
     public GameObject wakeUpPosition;
     GameObject player;
 
+    public GameObject theGift;
+
     public bool executeAction
     {
         get;
@@ -47,8 +49,14 @@ public class TimeSleep : MonoBehaviour, IActionEvent
 
     public void SetWakeUp()
     {
+        StopAllCoroutines();
         player.transform.position = wakeUpPosition.transform.position;
         txtButtonWakeUp.gameObject.SetActive(false);
+        txtFeedback.gameObject.SetActive(false);
+        fadeIn.SetActive(false);
+
+        Debug.Log("Muestra el regalo");
+        theGift.SetActive(true);
     }
 
     public void GoToSleep()

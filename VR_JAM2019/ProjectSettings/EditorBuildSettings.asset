@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ScenesGame/level2.unity
     guid: 8e1c7de9679a287458ed56c6404083f9
+  - enabled: 1
+    path: Assets/MainMapEstoperry/Scenes/Neighborhood.unity
+    guid: a45dd06826e9f2a4684233fb77b40676
   m_configObjects: {}
